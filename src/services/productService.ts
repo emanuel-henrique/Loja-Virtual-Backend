@@ -1,6 +1,5 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middlewares/errorHandler';
-import { Prisma } from '@prisma/client';
 
 export interface Product {
   id: string;
@@ -50,7 +49,7 @@ export interface ProductQuery {
 
 export class ProductService {
   async getAllProducts(filters: ProductQuery = {}): Promise<Product[]> {
-    const where: Prisma.ProductWhereInput = {};
+    const where: any = {};
 
     if (filters.category) {
       where.category = filters.category;
@@ -73,7 +72,7 @@ export class ProductService {
       };
     }
 
-    let orderBy: Prisma.ProductOrderByWithRelationInput;
+    let orderBy: any;
     switch (filters.sort_by) {
       case 'price_asc':
         orderBy = { price: 'asc' };
@@ -90,7 +89,7 @@ export class ProductService {
       orderBy,
     });
 
-    return products.map((p) => ({
+    return products.map((p: any) => ({
       id: p.id,
       name: p.name,
       slug: p.slug,
