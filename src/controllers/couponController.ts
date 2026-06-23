@@ -6,7 +6,8 @@ const couponService = new CouponService();
 
 export const validateCoupon = asyncHandler(async (req: Request, res: Response) => {
   const { code } = req.body;
-  const coupon = await couponService.validateCoupon(code);
+  // Forçando a conversão para garantir que 'code' seja tratado estritamente como string
+  const coupon = await couponService.validateCoupon(String(code));
   res.json({
     discount_type: coupon.discount_type,
     discount_value: coupon.discount_value,
