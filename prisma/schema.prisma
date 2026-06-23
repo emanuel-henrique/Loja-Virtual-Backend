@@ -25,6 +25,8 @@ model Product {
   sizes            String[]
   isFeatured       Boolean   @default(false) @map("is_featured")
   badges           String[]
+  rating           Float     @default(5.0)
+  reviews          Int       @default(0)
   createdAt        DateTime  @default(now()) @map("created_at")
 
   @@map("products")

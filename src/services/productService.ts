@@ -17,6 +17,8 @@ export interface Product {
   sizes: string[];
   is_featured: boolean;
   badges: string[];
+  rating: number;
+  reviews: number;
   created_at: string;
 }
 
@@ -103,6 +105,8 @@ export class ProductService {
       sizes: p.sizes,
       is_featured: p.isFeatured,
       badges: p.badges,
+      rating: p.rating,
+      reviews: p.reviews,
       created_at: p.createdAt.toISOString(),
     }));
   }
@@ -131,6 +135,8 @@ export class ProductService {
       sizes: product.sizes,
       is_featured: product.isFeatured,
       badges: product.badges,
+      rating: product.rating,
+      reviews: product.reviews,
       created_at: product.createdAt.toISOString(),
     };
   }
@@ -169,6 +175,8 @@ export class ProductService {
       sizes: product.sizes,
       is_featured: product.isFeatured,
       badges: product.badges,
+      rating: product.rating,
+      reviews: product.reviews,
       created_at: product.createdAt.toISOString(),
     };
   }
@@ -204,6 +212,8 @@ export class ProductService {
       sizes: product.sizes,
       is_featured: product.isFeatured,
       badges: product.badges,
+      rating: product.rating,
+      reviews: product.reviews,
       created_at: product.createdAt.toISOString(),
     };
   }
