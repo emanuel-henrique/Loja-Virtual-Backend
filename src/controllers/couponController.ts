@@ -5,9 +5,9 @@ import { asyncHandler } from '../middlewares/errorHandler';
 const couponService = new CouponService();
 
 export const validateCoupon = asyncHandler(async (req: Request, res: Response) => {
-  const { code } = req.body;
-  // Forçando a conversão para garantir que 'code' seja tratado estritamente como string
-  const coupon = await couponService.validateCoupon(String(code));
+  // Garantindo que 'code' seja lido estritamente como uma string vinda do body
+  const { code } = req.body as { code: string };
+  const coupon = await couponService.validateCoupon(code);
   res.json({
     discount_type: coupon.discount_type,
     discount_value: coupon.discount_value,
@@ -20,7 +20,8 @@ export const createCoupon = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const deleteCoupon = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
+  // Forçando o parâmetro a ser tratado estritamente como string para eliminar o erro TS2345
+  const { id } = req.params as { id: string };
   await couponService.deleteCoupon(id);
   res.status(204).send();
 });
