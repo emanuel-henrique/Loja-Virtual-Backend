@@ -5,6 +5,7 @@ import { asyncHandler } from '../middlewares/errorHandler';
 const productService = new ProductService();
 
 export const getProducts = asyncHandler(async (req: Request, res: Response) => {
+  // Passando req.query tipado explicitamente como any para o service aceitar os filtros de busca
   const products = await productService.getAllProducts(req.query as any);
   res.json(products);
 });
