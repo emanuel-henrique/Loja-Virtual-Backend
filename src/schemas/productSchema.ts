@@ -3,9 +3,9 @@ import { z } from 'zod';
 export const createProductSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255),
   description: z.string().min(1, 'Description is required'),
-  price: z.number().positive('Price must be positive'),
-  promotional_price: z.number().positive('Promotional price must be positive').optional().nullable(),
-  image_url: z.string().url('Image URL must be valid'),
+  price: z.number().min(0, 'Price must be >= 0'),
+  promotional_price: z.number().min(0, 'Promotional price must be >= 0').optional().nullable(),
+  image_url: z.string(),
   category: z.string().min(1, 'Category is required'),
   type: z.string().min(1, 'Type is required'),
   sizes: z.array(z.string()).min(1, 'At least one size is required'),
