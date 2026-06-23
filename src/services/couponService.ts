@@ -1,6 +1,6 @@
 import { prisma } from '../config/database';
 import { AppError } from '../middlewares/errorHandler';
-import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 export interface Coupon {
   id: string;
@@ -60,7 +60,7 @@ export class CouponService {
         created_at: coupon.createdAt.toISOString(),
       };
     } catch (error: any) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           throw new AppError(400, 'Coupon code already exists');
         }
@@ -80,7 +80,7 @@ export class CouponService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return coupons.map((c) => ({
+    return coupons.map((c: any) => ({
       id: c.id,
       code: c.code,
       discount_type: c.discountType as 'percentage' | 'fixed',
