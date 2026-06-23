@@ -4,6 +4,8 @@ import { errorHandler } from './middlewares/errorHandler';
 import productRoutes from './routes/productRoutes';
 import couponRoutes from './routes/couponRoutes';
 import authRoutes from './routes/authRoutes';
+import uploadRoutes from './routes/uploadRoutes';
+import path from 'path';
 
 function getAllowedOrigins(): string[] {
   const origins = [
@@ -35,9 +37,13 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static uploaded files
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 app.use('/api/products', productRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/admin', authRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
