@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getProducts,
   getProductById,
+  getProductBySlug,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -15,6 +16,7 @@ const router = Router();
 
 // Public routes
 router.get('/', validateQuery(productQuerySchema), getProducts);
+router.get('/slug/:slug', getProductBySlug); // ← deve vir ANTES de /:id
 router.get('/:id', getProductById);
 
 // Admin routes (protected)

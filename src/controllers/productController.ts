@@ -15,6 +15,16 @@ export const getProductById = asyncHandler(async (req: Request, res: Response) =
   res.json(product);
 });
 
+export const getProductBySlug = asyncHandler(async (req: Request, res: Response) => {
+  const slug = req.params.slug as string;
+  const product = await productService.getProductBySlug(slug);
+  if (!product) {
+    res.status(404).json({ error: 'Product not found' });
+    return;
+  }
+  res.json(product);
+});
+
 export const createProduct = asyncHandler(async (req: Request, res: Response) => {
   const product = await productService.createProduct(req.body);
   res.status(201).json(product);

@@ -140,6 +140,34 @@ export class ProductService {
     };
   }
 
+  async getProductBySlug(slug: string): Promise<Product | null> {
+    const product = await prisma.product.findUnique({
+      where: { slug },
+    });
+
+    if (!product) return null;
+
+    return {
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      club: product.club,
+      description: product.description,
+      price: Number(product.price),
+      promotional_price: product.promotionalPrice ? Number(product.promotionalPrice) : null,
+      image_url: product.imageUrl,
+      category: product.category,
+      type: product.type,
+      types: product.types,
+      sizes: product.sizes,
+      is_featured: product.isFeatured,
+      badges: product.badges,
+      rating: product.rating,
+      reviews: product.reviews,
+      created_at: product.createdAt.toISOString(),
+    };
+  }
+
   async createProduct(input: CreateProductInput): Promise<Product> {
     const product = await prisma.product.create({
       data: {
