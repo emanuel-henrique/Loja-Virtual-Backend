@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ 
+const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
 });
@@ -26,9 +26,9 @@ router.post('/', authMiddleware, upload.single('image'), (req, res) => {
     res.status(400).json({ error: 'No file uploaded' });
     return;
   }
-  
+
   // Return the public URL to access the uploaded file
-  const imageUrl = `/uploads/${req.file.filename}`;
+  const imageUrl = new URL(`/uploads/${req.file.filename}`, `${req.protocol}://${req.get('host')}`).href;
   res.json({ url: imageUrl });
 });
 
