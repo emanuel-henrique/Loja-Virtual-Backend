@@ -21,20 +21,103 @@ model Product {
   promotionalPrice Decimal?  @db.Decimal(10, 2)
   imageUrl         String    @map("image_url")
   category         String
+  categoryId       String?   @map("category_id")
+  categoryModel    Category? @relation(fields: [categoryId], references: [id])
   type             String
   types            String[]
   sizes            String[]
+  status           String    @default("in_stock") @map("status")
+  quantity         Int       @default(0)
+  paymentMethods   String[]  @map("payment_methods")
   isFeatured       Boolean   @default(false) @map("is_featured")
   badges           String[]
   rating           Float     @default(5.0)
   reviews          Int       @default(0)
   createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime? @map("updated_at")
 
   @@map("products")
   @@index([category])
+  @@index([categoryId])
   @@index([type])
+  @@index([status])
   @@index([isFeatured])
   @@index([slug])
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  isActive    Boolean   @default(true) @map("is_active")
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  products    Product[]
+
+  @@map("categories")
+  @@index([isActive])
+  @@index([order])
+}
+
+model SizeConfig {
+  id        String   @id @default(uuid())
+  name      String
+  value     String   @unique
+  chest     Decimal? @db.Decimal(5, 2)
+  length    Decimal? @db.Decimal(5, 2)
+  isActive  Boolean  @default(true) @map("is_active")
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("size_configs")
+  @@index([isActive])
+  @@index([order])
+}
+
+model SizeGuide {
+  id        String   @id @default(uuid())
+  size      String
+  chest     Decimal  @db.Decimal(5, 2)
+  length    Decimal  @db.Decimal(5, 2)
+  isActive  Boolean  @default(true) @map("is_active")
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("size_guides")
+  @@index([isActive])
+  @@index([order])
+}
+
+model TypeConfig {
+  id        String   @id @default(uuid())
+  name      String
+  value     String   @unique
+  isActive  Boolean  @default(true) @map("is_active")
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("type_configs")
+  @@index([isActive])
+  @@index([order])
+}
+
+model SiteConfig {
+  id          String   @id @default(uuid())
+  primaryColor String  @map("primary_color")
+  secondaryColor String @map("secondary_color")
+  accentColor String   @map("accent_color")
+  logoUrl     String?  @map("logo_url")
+  whatsappNumber String @map("whatsapp_number")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("site_config")
 }
 
 model Coupon {

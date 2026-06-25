@@ -7,17 +7,26 @@ export const createProductSchema = z.object({
   promotional_price: z.number().min(0, 'Promotional price must be >= 0').optional().nullable(),
   image_url: z.string(),
   category: z.string().min(1, 'Category is required'),
+  category_id: z.string().optional(),
   type: z.string().min(1, 'Type is required'),
+  types: z.array(z.string()).min(1, 'At least one type is required'),
   sizes: z.array(z.string()).min(1, 'At least one size is required'),
+  status: z.enum(['in_stock', 'on_order', 'sold_out']).default('in_stock'),
+  quantity: z.number().int().min(0).default(0),
+  payment_methods: z.array(z.string()).default(['pix', 'credit_card', 'debit_card']),
   is_featured: z.boolean().default(false),
+  badges: z.array(z.string()).default([]),
+  club: z.string().optional(),
 });
 
 export const updateProductSchema = createProductSchema.partial();
 
 export const productQuerySchema = z.object({
   category: z.string().optional(),
+  category_id: z.string().optional(),
   type: z.string().optional(),
   size: z.string().optional(),
+  status: z.enum(['in_stock', 'on_order', 'sold_out']).optional(),
   search: z.string().optional(),
   sort_by: z.enum(['price_asc', 'price_desc', 'created_at']).default('created_at'),
 });
