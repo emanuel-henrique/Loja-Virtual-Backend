@@ -41,15 +41,23 @@ export class CategoryService {
   }
 
   async createCategory(data: CreateCategoryInput) {
+    const { is_active, ...rest } = data;
     return await prisma.category.create({
-      data
+      data: {
+        ...rest,
+        isActive: is_active !== undefined ? is_active : true,
+      }
     });
   }
 
   async updateCategory(id: string, data: UpdateCategoryInput) {
+    const { is_active, ...rest } = data;
     return await prisma.category.update({
       where: { id },
-      data
+      data: {
+        ...rest,
+        isActive: is_active,
+      }
     });
   }
 
