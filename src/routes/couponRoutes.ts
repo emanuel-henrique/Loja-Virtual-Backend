@@ -15,8 +15,8 @@ const router = Router();
 router.post('/validate', validate(validateCouponSchema), validateCoupon);
 
 // Admin routes (protected)
+router.get('/', authMiddleware, getAllCoupons);
 router.post('/', authMiddleware, validate(createCouponSchema), createCoupon);
 router.delete('/:id', authMiddleware, deleteCoupon);
-router.get('/', authMiddleware, getAllCoupons);
 
 export default router;
