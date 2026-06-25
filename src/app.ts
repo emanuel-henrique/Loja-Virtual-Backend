@@ -10,6 +10,7 @@ import sizeConfigRoutes from './routes/sizeConfigRoutes';
 import sizeGuideRoutes from './routes/sizeGuideRoutes';
 import typeConfigRoutes from './routes/typeConfigRoutes';
 import siteConfigRoutes from './routes/siteConfigRoutes';
+import carouselRoutes from './routes/carouselRoutes';
 import path from 'path';
 
 function getAllowedOrigins(): string[] {
@@ -55,6 +56,7 @@ app.use('/api/size-configs', sizeConfigRoutes);
 app.use('/api/size-guides', sizeGuideRoutes);
 app.use('/api/type-configs', typeConfigRoutes);
 app.use('/api/site-config', siteConfigRoutes);
+app.use('/api/carousel-slides', carouselRoutes);
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
