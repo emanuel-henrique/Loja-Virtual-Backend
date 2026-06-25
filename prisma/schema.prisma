@@ -109,6 +109,7 @@ model TypeConfig {
 
 model SiteConfig {
   id             String   @id @default(uuid())
+  storeName      String   @default("Storm") @map("store_name")
   primaryColor   String   @map("primary_color")
   secondaryColor String   @map("secondary_color")
   accentColor    String   @map("accent_color")

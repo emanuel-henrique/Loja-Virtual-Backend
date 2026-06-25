@@ -8,6 +8,7 @@ export class SiteConfigService {
     if (!config) return null;
     return {
       id: config.id,
+      store_name: config.storeName,
       primary_color: config.primaryColor,
       secondary_color: config.secondaryColor,
       accent_color: config.accentColor,
@@ -26,6 +27,7 @@ export class SiteConfigService {
     if (!config) {
       const newConfig = await prisma.siteConfig.create({
         data: {
+          storeName: 'Storm',
           primaryColor: '#1a1a1a',
           secondaryColor: '#ffffff',
           accentColor: '#3b82f6',
@@ -39,6 +41,7 @@ export class SiteConfigService {
 
   async updateSiteConfig(id: string, data: any) {
     const mappedData = {
+      storeName: data.store_name,
       primaryColor: data.primary_color,
       secondaryColor: data.secondary_color,
       accentColor: data.accent_color,
