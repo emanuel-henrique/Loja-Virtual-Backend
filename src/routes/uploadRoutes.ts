@@ -31,17 +31,20 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
     return;
   }
 
-  // Check if Cloudinary is configured
-  const isCloudinaryConfigured =
-    process.env.CLOUDINARY_CLOUD_NAME &&
-    process.env.CLOUDINARY_API_KEY &&
-    process.env.CLOUDINARY_API_SECRET;
+  // Check if Cloudinary is configured (trim to avoid empty-string false positives)
+  const cloudName = (process.env.CLOUDINARY_CLOUD_NAME ?? '').trim();
+  const apiKey = (process.env.CLOUDINARY_API_KEY ?? '').trim();
+  const apiSecret = (process.env.CLOUDINARY_API_SECRET ?? '').trim();
+  const isCloudinaryConfigured = cloudName && apiKey && apiSecret;
+
+  const toBase64 = () => {
+    const base64 = req.file!.buffer.toString('base64');
+    return `data:${req.file!.mimetype};base64,${base64}`;
+  };
 
   if (!isCloudinaryConfigured) {
-    // Fallback: return base64 data URL (development only)
-    const base64 = req.file.buffer.toString('base64');
-    const dataUrl = `data:${req.file.mimetype};base64,${base64}`;
-    res.json({ url: dataUrl });
+    // Fallback: return base64 data URL when Cloudinary is not set up
+    res.json({ url: toBase64() });
     return;
   }
 
@@ -54,7 +57,7 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
           resource_type: 'image',
           transformation: [
             { quality: 'auto', fetch_format: 'auto' },
-            { width: 1200, height: 1500, crop: 'limit' },
+            { width: 1920, height: 1080, crop: 'limit' },
           ],
         },
         (error, result) => {
@@ -68,7 +71,8 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
     res.json({ url: result.secure_url });
   } catch (err: any) {
     console.error('Cloudinary upload error:', err);
-    res.status(500).json({ error: err.message ?? 'Erro ao fazer upload da imagem' });
+    // Fallback to base64 instead of crashing with 500
+    res.json({ url: toBase64() });
   }
 });
 
