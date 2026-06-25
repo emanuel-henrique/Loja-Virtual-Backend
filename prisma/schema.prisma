@@ -108,14 +108,17 @@ model TypeConfig {
 }
 
 model SiteConfig {
-  id          String   @id @default(uuid())
-  primaryColor String  @map("primary_color")
-  secondaryColor String @map("secondary_color")
-  accentColor String   @map("accent_color")
-  logoUrl     String?  @map("logo_url")
-  whatsappNumber String @map("whatsapp_number")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id             String   @id @default(uuid())
+  primaryColor   String   @map("primary_color")
+  secondaryColor String   @map("secondary_color")
+  accentColor    String   @map("accent_color")
+  logoUrl        String?  @map("logo_url")
+  whatsappNumber String   @map("whatsapp_number")
+  atendimento1   String   @default("Seg\u2013Sex \u00b7 10h \u00e0s 19h") @map("atendimento1")
+  atendimento2   String   @default("S\u00e1bado \u00b7 10h \u00e0s 14h") @map("atendimento2")
+  atendimento3   String   @default("Resposta em at\u00e9 30min") @map("atendimento3")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
   @@map("site_config")
 }

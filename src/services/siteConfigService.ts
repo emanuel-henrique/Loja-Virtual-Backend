@@ -13,6 +13,9 @@ export class SiteConfigService {
       accent_color: config.accentColor,
       logo_url: config.logoUrl,
       whatsapp_number: config.whatsappNumber,
+      atendimento1: config.atendimento1,
+      atendimento2: config.atendimento2,
+      atendimento3: config.atendimento3,
       created_at: config.createdAt,
       updated_at: config.updatedAt,
     };
@@ -40,7 +43,10 @@ export class SiteConfigService {
       secondaryColor: data.secondary_color,
       accentColor: data.accent_color,
       logoUrl: data.logo_url,
-      whatsappNumber: data.whatsapp_number
+      whatsappNumber: data.whatsapp_number,
+      atendimento1: data.atendimento1,
+      atendimento2: data.atendimento2,
+      atendimento3: data.atendimento3,
     };
     
     // Remove undefined values
