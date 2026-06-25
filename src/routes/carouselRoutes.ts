@@ -71,7 +71,7 @@ router.post('/', authMiddleware, async (req, res) => {
 // PUT /api/carousel-slides/:id — update
 router.put('/:id', authMiddleware, async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { eyebrow, title, description, cta, cta_hash, image_url, image_opacity, is_active, order } = req.body;
     const slide = await prisma.carouselSlide.update({
       where: { id },
@@ -96,7 +96,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
 // DELETE /api/carousel-slides/:id — delete
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {
-    await prisma.carouselSlide.delete({ where: { id: req.params.id } });
+    await prisma.carouselSlide.delete({ where: { id: req.params.id as string } });
     res.json({ success: true });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
