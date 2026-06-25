@@ -5,6 +5,21 @@ import { authMiddleware } from '../middlewares/authMiddleware';
 const router = Router();
 const prisma = new PrismaClient();
 
+function mapSlide(s: any) {
+  return {
+    id: s.id,
+    eyebrow: s.eyebrow,
+    title: s.title,
+    description: s.description,
+    cta: s.cta,
+    cta_hash: s.ctaHash,
+    image_url: s.imageUrl,
+    image_opacity: s.imageOpacity ?? 1.0,
+    is_active: s.isActive,
+    order: s.order,
+  };
+}
+
 // GET /api/carousel-slides — public, returns active slides ordered
 router.get('/', async (_req, res) => {
   try {
@@ -12,17 +27,7 @@ router.get('/', async (_req, res) => {
       where: { isActive: true },
       orderBy: { order: 'asc' },
     });
-    res.json(slides.map(s => ({
-      id: s.id,
-      eyebrow: s.eyebrow,
-      title: s.title,
-      description: s.description,
-      cta: s.cta,
-      cta_hash: s.ctaHash,
-      image_url: s.imageUrl,
-      is_active: s.isActive,
-      order: s.order,
-    })));
+    res.json(slides.map(mapSlide));
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch slides' });
   }
@@ -34,17 +39,7 @@ router.get('/admin', authMiddleware, async (_req, res) => {
     const slides = await prisma.carouselSlide.findMany({
       orderBy: { order: 'asc' },
     });
-    res.json(slides.map(s => ({
-      id: s.id,
-      eyebrow: s.eyebrow,
-      title: s.title,
-      description: s.description,
-      cta: s.cta,
-      cta_hash: s.ctaHash,
-      image_url: s.imageUrl,
-      is_active: s.isActive,
-      order: s.order,
-    })));
+    res.json(slides.map(mapSlide));
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch slides' });
   }
@@ -53,7 +48,7 @@ router.get('/admin', authMiddleware, async (_req, res) => {
 // POST /api/carousel-slides — create
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const { eyebrow, title, description, cta, cta_hash, image_url, is_active, order } = req.body;
+    const { eyebrow, title, description, cta, cta_hash, image_url, image_opacity, is_active, order } = req.body;
     const slide = await prisma.carouselSlide.create({
       data: {
         eyebrow: eyebrow ?? '',
@@ -62,21 +57,12 @@ router.post('/', authMiddleware, async (req, res) => {
         cta: cta ?? 'Ver catálogo',
         ctaHash: cta_hash ?? 'catalogo',
         imageUrl: image_url ?? null,
+        imageOpacity: image_opacity !== undefined ? Number(image_opacity) : 1.0,
         isActive: is_active ?? true,
         order: order ?? 0,
       },
     });
-    res.json({
-      id: slide.id,
-      eyebrow: slide.eyebrow,
-      title: slide.title,
-      description: slide.description,
-      cta: slide.cta,
-      cta_hash: slide.ctaHash,
-      image_url: slide.imageUrl,
-      is_active: slide.isActive,
-      order: slide.order,
-    });
+    res.json(mapSlide(slide));
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
@@ -86,7 +72,7 @@ router.post('/', authMiddleware, async (req, res) => {
 router.put('/:id', authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
-    const { eyebrow, title, description, cta, cta_hash, image_url, is_active, order } = req.body;
+    const { eyebrow, title, description, cta, cta_hash, image_url, image_opacity, is_active, order } = req.body;
     const slide = await prisma.carouselSlide.update({
       where: { id },
       data: {
@@ -96,21 +82,12 @@ router.put('/:id', authMiddleware, async (req, res) => {
         ...(cta !== undefined && { cta }),
         ...(cta_hash !== undefined && { ctaHash: cta_hash }),
         ...(image_url !== undefined && { imageUrl: image_url }),
+        ...(image_opacity !== undefined && { imageOpacity: Number(image_opacity) }),
         ...(is_active !== undefined && { isActive: is_active }),
         ...(order !== undefined && { order }),
       },
     });
-    res.json({
-      id: slide.id,
-      eyebrow: slide.eyebrow,
-      title: slide.title,
-      description: slide.description,
-      cta: slide.cta,
-      cta_hash: slide.ctaHash,
-      image_url: slide.imageUrl,
-      is_active: slide.isActive,
-      order: slide.order,
-    });
+    res.json(mapSlide(slide));
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }

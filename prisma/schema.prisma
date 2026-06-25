@@ -134,17 +134,18 @@ model Coupon {
 }
 
 model CarouselSlide {
-  id          String   @id @default(uuid())
-  eyebrow     String   @default("")
-  title       String
-  description String   @default("")
-  cta         String   @default("Ver catálogo")
-  ctaHash     String   @default("catalogo") @map("cta_hash")
-  imageUrl    String?  @map("image_url")
-  isActive    Boolean  @default(true) @map("is_active")
-  order       Int      @default(0)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id           String   @id @default(uuid())
+  eyebrow      String   @default("")
+  title        String
+  description  String   @default("")
+  cta          String   @default("Ver catálogo")
+  ctaHash      String   @default("catalogo") @map("cta_hash")
+  imageUrl     String?  @map("image_url")
+  imageOpacity Float    @default(1.0) @map("image_opacity")
+  isActive     Boolean  @default(true) @map("is_active")
+  order        Int      @default(0)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("carousel_slides")
   @@index([isActive])
