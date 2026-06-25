@@ -26,14 +26,19 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
   }
 
   // Check if Cloudinary is configured (trim to avoid empty-string false positives)
+  const cloudinaryUrl = (process.env.CLOUDINARY_URL ?? '').trim();
   const cloudName = (process.env.CLOUDINARY_CLOUD_NAME ?? '').trim();
   const apiKey = (process.env.CLOUDINARY_API_KEY ?? '').trim();
   const apiSecret = (process.env.CLOUDINARY_API_SECRET ?? '').trim();
-  const isCloudinaryConfigured = cloudName && apiKey && apiSecret;
+  const isCloudinaryConfigured = !!(cloudinaryUrl || (cloudName && apiKey && apiSecret));
 
   // Re-configure Cloudinary per-request with trimmed values
   if (isCloudinaryConfigured) {
-    cloudinary.config({ cloud_name: cloudName, api_key: apiKey, api_secret: apiSecret });
+    if (cloudinaryUrl) {
+      cloudinary.config(); // auto-configures using CLOUDINARY_URL environment variable
+    } else {
+      cloudinary.config({ cloud_name: cloudName, api_key: apiKey, api_secret: apiSecret });
+    }
   }
 
   const toBase64 = () => {
