@@ -19,7 +19,12 @@ export class TypeConfigService {
 
   async createTypeConfig(data: CreateTypeConfigInput) {
     return await prisma.typeConfig.create({
-      data
+      data: {
+        name: data.name || data.value,
+        value: data.value,
+        isActive: true,
+        order: data.order ?? 0,
+      }
     });
   }
 

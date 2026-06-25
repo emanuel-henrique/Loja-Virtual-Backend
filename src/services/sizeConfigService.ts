@@ -19,7 +19,14 @@ export class SizeConfigService {
 
   async createSizeConfig(data: CreateSizeConfigInput) {
     return await prisma.sizeConfig.create({
-      data
+      data: {
+        name: data.name || data.value,
+        value: data.value,
+        chest: data.chest,
+        length: data.length,
+        isActive: true,
+        order: data.order ?? 0,
+      }
     });
   }
 
