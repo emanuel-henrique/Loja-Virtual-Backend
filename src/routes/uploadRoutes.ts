@@ -1,20 +1,11 @@
 import { Router } from 'express';
 import multer from 'multer';
-import path from 'path';
 import { authMiddleware } from '../middlewares/authMiddleware';
 
 const router = Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
-  },
-});
+// Use memory storage for serverless compatibility (Vercel)
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
@@ -27,8 +18,10 @@ router.post('/', authMiddleware, upload.single('image'), (req, res) => {
     return;
   }
 
-  // Return the public URL to access the uploaded file
-  const imageUrl = new URL(`/uploads/${req.file.filename}`, `${req.protocol}://${req.get('host')}`).href;
+  // Convert image buffer to Base64 Data URL
+  const base64Data = req.file.buffer.toString('base64');
+  const imageUrl = `data:${req.file.mimetype};base64,${base64Data}`;
+  
   res.json({ url: imageUrl });
 });
 
