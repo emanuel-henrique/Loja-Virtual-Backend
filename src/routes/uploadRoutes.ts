@@ -75,8 +75,7 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
     res.json({ url: result.secure_url });
   } catch (err: any) {
     console.error('Cloudinary upload error:', err);
-    // Fallback to base64 instead of crashing with 500
-    res.json({ url: toBase64() });
+    res.status(500).json({ error: `Erro no Cloudinary: ${err.message || JSON.stringify(err)}` });
   }
 });
 
