@@ -27,7 +27,7 @@ export class SiteConfigService {
     if (!config) {
       const newConfig = await prisma.siteConfig.create({
         data: {
-          storeName: 'Storm',
+          storeName: 'Loja',
           primaryColor: '#1a1a1a',
           secondaryColor: '#ffffff',
           accentColor: '#3b82f6',
@@ -51,7 +51,7 @@ export class SiteConfigService {
       atendimento2: data.atendimento2,
       atendimento3: data.atendimento3,
     };
-    
+
     // Remove undefined values
     Object.keys(mappedData).forEach(key => {
       if ((mappedData as any)[key] === undefined) {

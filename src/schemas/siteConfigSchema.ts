@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const createSiteConfigSchema = z.object({
-  store_name: z.string().min(1, 'Store name is required').max(100).optional().default('Storm'),
+  store_name: z.string().min(1, 'Store name is required').max(100).optional().default('Loja'),
   primary_color: z.string().min(1, 'Primary color is required').max(50),
   secondary_color: z.string().min(1, 'Secondary color is required').max(50),
   accent_color: z.string().min(1, 'Accent color is required').max(50),
