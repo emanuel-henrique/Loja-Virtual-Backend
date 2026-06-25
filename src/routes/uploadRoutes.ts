@@ -5,12 +5,6 @@ import { authMiddleware } from '../middlewares/authMiddleware';
 
 const router = Router();
 
-// Configure Cloudinary from environment variables
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 // Use memory storage – file buffer is streamed directly to Cloudinary
 const storage = multer.memoryStorage();
@@ -36,6 +30,11 @@ router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
   const apiKey = (process.env.CLOUDINARY_API_KEY ?? '').trim();
   const apiSecret = (process.env.CLOUDINARY_API_SECRET ?? '').trim();
   const isCloudinaryConfigured = cloudName && apiKey && apiSecret;
+
+  // Re-configure Cloudinary per-request with trimmed values
+  if (isCloudinaryConfigured) {
+    cloudinary.config({ cloud_name: cloudName, api_key: apiKey, api_secret: apiSecret });
+  }
 
   const toBase64 = () => {
     const base64 = req.file!.buffer.toString('base64');
