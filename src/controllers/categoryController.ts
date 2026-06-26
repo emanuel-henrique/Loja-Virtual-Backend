@@ -45,3 +45,24 @@ export const deleteCategory = asyncHandler(async (req: Request, res: Response) =
   await categoryService.deleteCategory(id);
   res.status(204).send();
 });
+
+export const addSizeTypeToCategory = asyncHandler(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const { sizeTypeId } = req.body;
+  const categorySizeType = await categoryService.addSizeTypeToCategory(id, sizeTypeId);
+  res.status(201).json(categorySizeType);
+});
+
+export const removeSizeTypeFromCategory = asyncHandler(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const sizeTypeId = req.params.sizeTypeId as string;
+  await categoryService.removeSizeTypeFromCategory(id, sizeTypeId);
+  res.status(204).send();
+});
+
+export const updateCategorySizeTypes = asyncHandler(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const { sizeTypeIds } = req.body;
+  await categoryService.updateCategorySizeTypes(id, sizeTypeIds);
+  res.status(204).send();
+});

@@ -24,6 +24,7 @@ export class SizeConfigService {
         value: data.value,
         chest: data.chest,
         length: data.length,
+        sizeTypeId: data.sizeTypeId,
         isActive: true,
         order: data.order ?? 0,
       }

@@ -5,6 +5,7 @@ export const createSizeConfigSchema = z.object({
   value: z.string().min(1, 'Value is required').max(50),
   chest: z.number().nullable().optional(),
   length: z.number().nullable().optional(),
+  sizeTypeId: z.string().uuid().optional(),
   isActive: z.boolean().default(true),
   order: z.number().int().min(0).default(0),
 });

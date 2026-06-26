@@ -11,6 +11,18 @@ export class CategoryService {
       include: {
         _count: {
           select: { products: true }
+        },
+        sizeTypes: {
+          include: {
+            sizeType: {
+              include: {
+                sizeConfigs: {
+                  where: { isActive: true },
+                  orderBy: { order: 'asc' }
+                }
+              }
+            }
+          }
         }
       }
     });
@@ -65,5 +77,38 @@ export class CategoryService {
     return await prisma.category.delete({
       where: { id }
     });
+  }
+
+  async addSizeTypeToCategory(categoryId: string, sizeTypeId: string) {
+    return await prisma.categorySizeType.create({
+      data: {
+        categoryId,
+        sizeTypeId
+      }
+    });
+  }
+
+  async removeSizeTypeFromCategory(categoryId: string, sizeTypeId: string) {
+    return await prisma.categorySizeType.deleteMany({
+      where: {
+        categoryId,
+        sizeTypeId
+      }
+    });
+  }
+
+  async updateCategorySizeTypes(categoryId: string, sizeTypeIds: string[]) {
+    await prisma.categorySizeType.deleteMany({
+      where: { categoryId }
+    });
+
+    if (sizeTypeIds.length > 0) {
+      await prisma.categorySizeType.createMany({
+        data: sizeTypeIds.map(sizeTypeId => ({
+          categoryId,
+          sizeTypeId
+        }))
+      });
+    }
   }
 }

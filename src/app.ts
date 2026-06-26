@@ -9,6 +9,7 @@ import categoryRoutes from './routes/categoryRoutes';
 import sizeConfigRoutes from './routes/sizeConfigRoutes';
 import sizeGuideRoutes from './routes/sizeGuideRoutes';
 import typeConfigRoutes from './routes/typeConfigRoutes';
+import sizeTypeRoutes from './routes/sizeTypeRoutes';
 import siteConfigRoutes from './routes/siteConfigRoutes';
 import carouselRoutes from './routes/carouselRoutes';
 import path from 'path';
@@ -55,6 +56,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/size-configs', sizeConfigRoutes);
 app.use('/api/size-guides', sizeGuideRoutes);
 app.use('/api/type-configs', typeConfigRoutes);
+app.use('/api/size-types', sizeTypeRoutes);
 app.use('/api/site-config', siteConfigRoutes);
 app.use('/api/carousel-slides', carouselRoutes);
 

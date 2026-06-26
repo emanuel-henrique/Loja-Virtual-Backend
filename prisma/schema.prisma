@@ -58,6 +58,7 @@ model Category {
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
   products    Product[]
+  sizeTypes   CategorySizeType[]
 
   @@map("categories")
   @@index([isActive])
@@ -65,19 +66,22 @@ model Category {
 }
 
 model SizeConfig {
-  id        String   @id @default(uuid())
-  name      String
-  value     String   @unique
-  chest     Decimal? @db.Decimal(5, 2)
-  length    Decimal? @db.Decimal(5, 2)
-  isActive  Boolean  @default(true) @map("is_active")
-  order     Int      @default(0)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id          String    @id @default(uuid())
+  name        String
+  value       String    @unique
+  chest       Decimal?  @db.Decimal(5, 2)
+  length      Decimal?  @db.Decimal(5, 2)
+  sizeTypeId  String?   @map("size_type_id")
+  sizeType    SizeType? @relation(fields: [sizeTypeId], references: [id])
+  isActive    Boolean   @default(true) @map("is_active")
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
   @@map("size_configs")
   @@index([isActive])
   @@index([order])
+  @@index([sizeTypeId])
 }
 
 model SizeGuide {
@@ -93,6 +97,37 @@ model SizeGuide {
   @@map("size_guides")
   @@index([isActive])
   @@index([order])
+}
+
+model SizeType {
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  isActive  Boolean   @default(true) @map("is_active")
+  order     Int       @default(0)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  sizeConfigs      SizeConfig[]
+  categorySizeTypes CategorySizeType[]
+
+  @@map("size_types")
+  @@index([isActive])
+  @@index([order])
+}
+
+model CategorySizeType {
+  id          String   @id @default(uuid())
+  categoryId  String   @map("category_id")
+  sizeTypeId  String   @map("size_type_id")
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  sizeType    SizeType @relation(fields: [sizeTypeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@unique([categoryId, sizeTypeId])
+  @@map("category_size_types")
+  @@index([categoryId])
+  @@index([sizeTypeId])
 }
 
 model TypeConfig {
