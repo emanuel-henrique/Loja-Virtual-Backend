@@ -169,63 +169,48 @@ export class ProductService {
   }
 
   async createProduct(input: CreateProductInput): Promise<Product> {
-    let slug = input.slug || input.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    
-    // Handle unique slug constraint
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    while (attempts < maxAttempts) {
-      try {
-        const product = await prisma.product.create({
-          data: {
-            name: input.name,
-            slug: slug,
-            club: input.club || null,
-            description: input.description,
-            price: input.price,
-            promotionalPrice: input.promotional_price || null,
-            imageUrl: input.image_url,
-            category: input.category,
-            type: input.type,
-            types: input.types,
-            sizes: input.sizes,
-            isFeatured: input.is_featured || false,
-            badges: input.badges || [],
-          },
-        });
+    // Always generate slug automatically from name + timestamp to ensure uniqueness
+    const timestamp = Date.now();
+    const randomSuffix = Math.random().toString(36).substring(2, 8);
+    const slug = `${input.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${timestamp}-${randomSuffix}`;
 
-        return {
-          id: product.id,
-          name: product.name,
-          slug: product.slug,
-          club: product.club,
-          description: product.description,
-          price: Number(product.price),
-          promotional_price: product.promotionalPrice ? Number(product.promotionalPrice) : null,
-          image_url: product.imageUrl,
-          category: product.category,
-          type: product.type,
-          types: product.types,
-          sizes: product.sizes,
-          is_featured: product.isFeatured,
-          badges: product.badges,
-          rating: product.rating,
-          reviews: product.reviews,
-          created_at: product.createdAt.toISOString(),
-        };
-      } catch (error: any) {
-        if (error.code === 'P2002' && error.meta?.target?.includes('slug')) {
-          // Slug already exists, try with a suffix
-          attempts++;
-          slug = `${slug}-${attempts}`;
-        } else {
-          throw error;
-        }
-      }
-    }
-    
-    throw new AppError(400, 'Não foi possível gerar um slug único para este produto. Tente usar um nome diferente.');
+    const product = await prisma.product.create({
+      data: {
+        name: input.name,
+        slug: slug,
+        club: input.club || null,
+        description: input.description,
+        price: input.price,
+        promotionalPrice: input.promotional_price || null,
+        imageUrl: input.image_url,
+        category: input.category,
+        type: input.type,
+        types: input.types,
+        sizes: input.sizes,
+        isFeatured: input.is_featured || false,
+        badges: input.badges || [],
+      },
+    });
+
+    return {
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      club: product.club,
+      description: product.description,
+      price: Number(product.price),
+      promotional_price: product.promotionalPrice ? Number(product.promotionalPrice) : null,
+      image_url: product.imageUrl,
+      category: product.category,
+      type: product.type,
+      types: product.types,
+      sizes: product.sizes,
+      is_featured: product.isFeatured,
+      badges: product.badges,
+      rating: product.rating,
+      reviews: product.reviews,
+      created_at: product.createdAt.toISOString(),
+    };
   }
 
   async updateProduct(id: string, input: UpdateProductInput): Promise<Product> {
